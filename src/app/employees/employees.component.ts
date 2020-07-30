@@ -13,10 +13,10 @@ export class EmployeesComponent implements OnInit {
   tableData: any;
   data: any[];
   newTableData: any[] = [];
+  service: any;
 
   ngOnInit() {
-    this._service.getTableData().subscribe((result) => {
-      debugger;
+    this.service = this._service.getTableData().subscribe((result) => {
       this.tableData = result.data;
       for (var i = 0; i < this.tableData.length; i++) {
         this.newTableData.push({ "id": this.tableData[i].id, "name": this.tableData[i].name, "phone": isNaN(parseInt(this.tableData[i].phone)) ? 'NA' : this.tableData[i].phone, "city": this.tableData[i].address.city, "address_line1": this.tableData[i].address.address_line1, "address_line2": this.tableData[i].address.address_line2, "postal_code": this.tableData[i].address.postal_code });
@@ -39,5 +39,9 @@ export class EmployeesComponent implements OnInit {
 
   edit(id) {
     this.router.navigate(['edit', { id: id }]);
+  }
+
+  ngOnDestroy() {
+    this.service.unsubscribe();
   }
 }

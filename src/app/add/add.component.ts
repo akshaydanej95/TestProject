@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Location } from '@angular/common';
 import { ServicesService, BasicData, Address } from '../employees/services.service';
 
 @Component({
@@ -14,8 +13,9 @@ export class AddComponent implements OnInit {
   submitted = false;
   basicData: BasicData = new BasicData();
   addressObj: Address = new Address();
+  service: any;
 
-  constructor(private formBuilder: FormBuilder, private _service: ServicesService, private location: Location) { }
+  constructor(private formBuilder: FormBuilder, private _service: ServicesService, ) { }
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
@@ -38,7 +38,6 @@ export class AddComponent implements OnInit {
     if (this.registerForm.invalid) {
       return;
     }
-    alert('ADDED SUCCESSFULLY!! :-)\n\n' + JSON.stringify(this.registerForm.value));
     this.basicData.name = this.registerForm.value.name;
     this.basicData.phone = this.registerForm.value.phone;
     this.addressObj.address_line1 = this.registerForm.value.address_line1;
@@ -46,12 +45,17 @@ export class AddComponent implements OnInit {
     this.addressObj.city = this.registerForm.value.city;
     this.addressObj.postal_code = this.registerForm.value.postal_code;
     this.basicData.address = this.addressObj;
-    this._service.postTableData(this.basicData).subscribe(() => {
+    this.service = this._service.postTableData(this.basicData).subscribe(() => {
+    alert('ADDED SUCCESSFULLY!! :-)\n\n' + JSON.stringify(this.registerForm.value));
       this.back();
     });
   }
 
   back() {
-    this.location.back();
+    this._service.back();
+  }
+
+  ngOnDestroy() {
+    this.service.unsubscribe(); 
   }
 }

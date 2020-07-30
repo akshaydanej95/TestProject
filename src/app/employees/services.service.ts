@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Location } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServicesService {
 
-  constructor(public http: HttpClient) { }
+  constructor(public http: HttpClient, private location: Location) { }
 
   getTableData() {
     return this.http.get<Data>("assets/data.json");
@@ -18,6 +19,10 @@ export class ServicesService {
 
   putTableData(data: BasicData) {
     return this.http.put<Data>("assets/data.json", data);
+  }
+
+  back() {
+    this.location.back();
   }
 }
 
